@@ -58,11 +58,11 @@ pub fn deinit(self: *Self) void {
 }
 
 pub const Result = struct {
-    rotation: f32,
+    head_tilt: f32,
 };
 pub fn poll(self: *Self) !Result {
     var frame = self.frame;
-    var rotation: f32 = 0;
+    var head_tilt: f32 = 0;
 
     self.webcam.read(&frame) catch {
         std.debug.print("capture failed", .{});
@@ -98,16 +98,16 @@ pub fn poll(self: *Self) !Result {
         defer mediapipe.mp_destroy_packet(packet);
         const landmarks = mediapipe.mp_get_norm_landmarks(packet);
         defer mediapipe.mp_destroy_landmarks(landmarks);
-        const nose = landmarks.*.elements[1];
-        const cheek = landmarks.*.elements[411];
-        rotation = std.math.atan2(cheek.y - nose.y, cheek.x - nose.x);
+        const nose = landmarks.*.elements[116];
+        const cheek = landmarks.*.elements[345];
+        head_tilt = std.math.atan2(cheek.y - nose.y, cheek.x - nose.x);
 
         // do face landmark logic
         //drawLandmarks(&frame, landmarks);
     }
 
     return Result{
-        .rotation = rotation,
+        .head_tilt = head_tilt,
     };
 }
 

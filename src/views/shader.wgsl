@@ -1,6 +1,5 @@
 struct Config {
     seg1: f32,
-    seg2: f32,
 };
 
 @group(0) @binding(0) var mainSampler: sampler;
@@ -8,7 +7,7 @@ struct Config {
 @group(0) @binding(2) var<uniform> config: Config;
 
 struct Result {
-    rotation: f32,
+    head_tilt: f32,
 };
 
 @group(1) @binding(0) var<uniform> result: Result;
@@ -16,15 +15,13 @@ struct Result {
 struct VertexOutput {
     @builtin(position) position: vec4<f32>,
     @location(0) texcoord: vec2<f32>,
+    rotate: bool,
 };
 
 @vertex fn vertex_main(
     @builtin(vertex_index) VertexIndex : u32
 ) -> VertexOutput {
     var uvSeg1 = config.seg1 * 2 - 1;
-    var uvSeg2 = config.seg2 * 2 - 1;
-
-    var rotation = result.rotation;
 
     var pos = array<vec2<f32>, 18>(
         // Seg 1
@@ -38,37 +35,26 @@ struct VertexOutput {
         // Seg 2
         vec2<f32>(-1.0, uvSeg1),  // ↙
         vec2<f32>(1.0, uvSeg1),  // ↘
-        vec2<f32>(-1.0, uvSeg2),  // ↖
-        vec2<f32>(-1.0, uvSeg2),  // ↖
+        vec2<f32>(-1.0, 1),  // ↖
+        vec2<f32>(-1.0, 1),  // ↖
         vec2<f32>(1.0, uvSeg1),  // ↘
-        vec2<f32>(1.0, uvSeg2),  // ↗
-
-        // Seg 3
-        vec2<f32>(-1.0, uvSeg2),  // ↙
-        vec2<f32>(1.0, uvSeg2),  // ↘
-        vec2<f32>(-1.0, 1.0),  // ↖
-        vec2<f32>(-1.0, 1.0),  // ↖
-        vec2<f32>(1.0, uvSeg2),  // ↘
-        vec2<f32>(1.0, 1.0),  // ↗
+        vec2<f32>(1.0, 1),  // ↗
     );
 
     var vsOutput: VertexOutput;
     let xy = pos[VertexIndex];
 
     vsOutput.texcoord = xy;//flipY(xy);
-
-    if (VertexIndex < 8 || VertexIndex == 10) {
-        vsOutput.position = vec4<f32>(xy, 0.0, 1.0);
-    } else {
-        vsOutput.position = vec4<f32>(rotate(xy, uvSeg1 + 0.2, rotation), 0.0, 1.0);
-    };
+    vsOutput.position = vec4<f32>(xy, 0.0, 1.0);
+    vsOutput.rotate = VertexIndex > 5;
     return vsOutput;
 }
 
 fn rotate(xy: vec2<f32>, y: f32, r: f32) -> vec2<f32>{
-    var angle = atan2(xy.y - y, xy.x);
+    var a = atan2(xy.y - y, xy.x);
     var l = length(vec2<f32>(xy.x, xy.y - y));
-    return vec2<f32>(l * cos(angle - r), l * sin(angle - r) + y);
+    var t = a - r * (1 - pow(2.718281828459045, - (xy.y - y) * 2.5));
+    return vec2<f32>(l * cos(t), l * sin(t) + y);
 }
 
 fn flipY(xy: vec2<f32>) -> vec2<f32> {
@@ -87,5 +73,11 @@ fn mapping(pos: vec2<f32>) -> vec2<f32> {
 }
 
 @fragment fn frag_main(fsInput: VertexOutput) -> @location(0) vec4<f32> {
-    return textureSample(mainTexture, mainSampler, flipY(fsInput.texcoord));
+    var uvSeg1 = config.seg1 * 2 - 1;
+    var head_tilt = result.head_tilt;
+    var texcoord = fsInput.texcoord;
+    if (fsInput.rotate) {
+        texcoord = rotate(texcoord, uvSeg1, head_tilt);
+    }
+    return textureSample(mainTexture, mainSampler, flipY(texcoord));
 }

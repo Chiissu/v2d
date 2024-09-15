@@ -36,7 +36,6 @@ fn init(game: *Mod, core: *mach.Core.Mod) !void {
 
 const Config = struct {
     seg1: f32,
-    seg2: f32,
 };
 
 fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
@@ -118,7 +117,6 @@ fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
 
     const config = Config{
         .seg1 = 0.21875,
-        .seg2 = 0.375,
     };
     const config_buffer = device.createBuffer(&.{
         .label = "config",
@@ -220,7 +218,7 @@ fn tick(core: *mach.Core.Mod, game: *Mod) !void {
     render_pass.setPipeline(game.state().pipeline);
     render_pass.setBindGroup(0, binding0, null);
     render_pass.setBindGroup(1, binding1, null);
-    render_pass.draw(18, 1, 0, 0);
+    render_pass.draw(12, 1, 0, 0);
 
     // Finish render pass
     render_pass.end();
