@@ -1,0 +1,35 @@
+.{
+    .name = "v2d",
+
+    .version = "0.0.0",
+
+    .minimum_zig_version = "0.13.0",
+
+    .dependencies = .{
+        .mach = .{
+            .url = "https://github.com/hexops/mach/archive/98801a258e4f59e1c464206684e7751818609f77.tar.gz",
+            .hash = "1220c62d964c12d2446d90a294e28f863b7f668dd5c3691e652f336119b2096d11f4",
+        },
+        .zigimg = .{
+            .url = "https://github.com/zigimg/zigimg/archive/d9dbbe22b5f7b5f1f4772169ed93ffeed8e8124d.zip",
+            .hash = "122013646f7038ecc71ddf8a0d7de346d29a6ec40140af57f838b0a975c69af512b0",
+        },
+        .zigcv = .{
+            .url = "https://github.com/Froxcey/zigcv/archive/refs/tags/0.13_compat_0.2.0.tar.gz",
+            .hash = "1220b283a1e91944d07b0018d4b59221a2031f342b55b062d170936dc413d098f214",
+        },
+        .@"mach-imgui" = .{
+            .url = "https://github.com/Froxcey/mach-imgui/archive/84efeaa62bff899475c0994dbf1372e30680dc10.zip",
+            .hash = "1220a733821fd9d7ad636d0616cea58e7c83d8db1971e694dc54edc1ff595257a4e5",
+        },
+        .nfd = .{
+            .url = "https://github.com/Froxcey/nfd-zig/archive/f6d36231ca34eeb7668c3672b7892a0490608171.tar.gz",
+            .hash = "122074ece772fc03abffa254b6e717aa3efc86832488954ac6a962e02a039d781ed1",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
