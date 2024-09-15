@@ -1,4 +1,4 @@
-[Last updated: 30/Aug, 2024]
+[Last updated: 15/Sep, 2024]
 
 This short and non-binding guideline outlines how to use our intellectual property to help creators and consumers engage with our work with mutual expectations and common sense.
 
@@ -6,5 +6,6 @@ This short and non-binding guideline outlines how to use our intellectual proper
 2. Credit us for the usage of our work
 3. Modification to our work must be shared with us to benefit everyone
 4. Commercial distribution of our and your derivative work must be done in person, using a physical medium, and without reliance on any subscription service or rights management
-5. Serious violation of this guideline may result in legal actions
-6. We may update this guideline at any time without notice, so please review this periodically
+5. Telemetry should always be opt-in only
+6. Serious violation of this guideline may result in legal actions
+7. We may update this guideline at any time without notice, so please review this periodically
