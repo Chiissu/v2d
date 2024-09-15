@@ -126,6 +126,7 @@ fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
         .size = @sizeOf(Config),
         .mapped_at_creation = gpu.Bool32.false,
     });
+    defer config_buffer.release();
     queue.writeBuffer(config_buffer, 0, &std.mem.toBytes(config));
 
     binding0 = device.createBindGroup(&gpu.BindGroup.Descriptor.init(.{
@@ -179,6 +180,7 @@ fn tick(core: *mach.Core.Mod, game: *Mod) !void {
         .size = @sizeOf(landmark.Result),
         .mapped_at_creation = gpu.Bool32.false,
     });
+    defer result_buffer.release();
     const layout1 = game.state().pipeline.getBindGroupLayout(1);
     defer layout1.release();
     queue.writeBuffer(result_buffer, 0, &std.mem.toBytes(result));
