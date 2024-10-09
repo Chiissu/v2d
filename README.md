@@ -4,7 +4,7 @@ Cool wip stuff, build it yourself to see what this does.
 
 ## Installation
 
-> Installation can sometimes take up to 20min depending on your hardware. Please be patient with the installation process.
+> Building can sometimes take up to 20min depending on your hardware. Please trust the process.
 
 ### MacOS
 
@@ -16,14 +16,16 @@ brew tap chiissu/macchiato & brew install v2d
 
 ### Linux
 
-It is very possible to get this up and running on Linux. Since I cannot maintain a repository you'll have to do two things yourself:
+It is very possible to get this up and running on Linux. Since I cannot maintain a Linux repository, you'll have to do two things yourself:
+
+> Note that I haven't ported libmediapipe build script to Linux, but it is very much possible and is planned to be done soon
 
 1. Build and install [libmediapipe](https://github.com/froxcey/libmediapipe)
 2. Build v2d
 
 ### Windows
 
-This project theoretically could work on Windows, but the upstream software, mediapipe, does not support hardware accelerated detection on Windows. Also, I don't have access to a Windows machine. There is no plan to provide official Windows support until dependency requirements are met.
+Since Mediapipe doesn't support hardware acceleration on Windows and I don't have access to a Windows machine, there is no plan to support Windows in the foreseeable future.
 
 ## Running
 
