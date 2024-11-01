@@ -1,6 +1,8 @@
 # V2D Studio
 
-Cool wip stuff, build it yourself to see what this does.
+Animate an image into a virtual avatar using your webcam. This is especially useful for those who don't have a 3D avatar but wants to start VTubing.
+
+V2D Studio is written in Zig using [Mach](https://machengine.org/) and [Mediapipe](https://ai.google.dev/edge/mediapipe).
 
 ## Installation
 
@@ -39,9 +41,12 @@ If you have any general question regarding the usage of v2d, feel free to contac
 
 You're welcome to add projects here, as long as it is primarily written in a [tier B language or above](https://github.com/Froxcey/Froxcey/blob/main/lang_tier.md) and source available. We encourage users to check out alternatives and choose what is the best for their own use case.
 
-## Future plan
+## Future plans
 
-It would be cool to add WebRTP video streaming support
+1. WebRTP remote support
+2. Parallax
+3. Special effects and shaders
+4. Plug-in system (longer term)
 
 ## Copyright & Usage Guideline
 

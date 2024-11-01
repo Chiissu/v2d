@@ -8,8 +8,7 @@ const resource_dir = "/opt/homebrew/opt/libmediapipe/lib/data";
 
 const Self = @This();
 const InitConfig = struct {
-    camera_id: u8 = 0,
-    use_gpu: bool = true,
+    id: u8 = 0,
 };
 
 webcam: cv.VideoCapture,
@@ -20,7 +19,7 @@ face_landmarks_poller: *mediapipe.mp_poller,
 
 pub fn init(config: InitConfig) !Self {
     var webcam = try cv.VideoCapture.init();
-    try webcam.openDevice(config.camera_id);
+    try webcam.openDevice(config.id);
 
     mediapipe.mp_set_resource_dir(resource_dir);
     const builder = mediapipe.mp_create_instance_builder(resource_dir ++ "/mediapipe/modules/holistic_landmark/holistic_landmark_gpu.binarypb", "image");
@@ -58,11 +57,18 @@ pub fn deinit(self: *Self) void {
 }
 
 pub const Result = struct {
-    head_tilt: f32,
+    head_x: f32 = 0,
+    head_y: f32 = 0,
+    head_z: f32 = 0,
+    body_pos_x: f32 = 0,
+    body_pos_y: f32 = 0,
+    body_rot_x: f32 = 0,
+    body_rot_z: f32 = 0,
 };
+
 pub fn poll(self: *Self) !Result {
     var frame = self.frame;
-    var head_tilt: f32 = 0;
+    var result = Result{};
 
     self.webcam.read(&frame) catch {
         std.debug.print("capture failed", .{});
@@ -81,8 +87,8 @@ pub fn poll(self: *Self) !Result {
         .format = mediapipe.mp_image_format_srgba,
     };
 
-    const p = mediapipe.mp_create_packet_image(image);
-    checkBool(mediapipe.mp_process(self.instance, p));
+    const image_packet = mediapipe.mp_create_packet_image(image);
+    checkBool(mediapipe.mp_process(self.instance, image_packet));
     checkBool(mediapipe.mp_wait_until_idle(self.instance));
 
     if (mediapipe.mp_get_queue_size(self.pose_landmarks_poller) > 0) {
@@ -91,6 +97,12 @@ pub fn poll(self: *Self) !Result {
         const landmarks = mediapipe.mp_get_norm_landmarks(packet);
         defer mediapipe.mp_destroy_landmarks(landmarks);
         // do pose landmark logic
+        const left_shulder = landmarks.*.elements[11];
+        const right_shulder = landmarks.*.elements[12];
+        result.body_pos_x = ((left_shulder.x + right_shulder.x) / 2 - 0.5) * 2;
+        result.body_pos_y = ((left_shulder.y + right_shulder.y) / 2 - 0.8) * 2;
+        result.body_rot_x = -std.math.atan2(left_shulder.y - right_shulder.y, left_shulder.x - right_shulder.x);
+        //result.body_rot_z = std.math.atan2(left_shulder.x - right_shulder.x, left_shulder.z - right_shulder.z) - 1.570795;
     }
 
     if (mediapipe.mp_get_queue_size(self.face_landmarks_poller) > 0) {
@@ -100,15 +112,15 @@ pub fn poll(self: *Self) !Result {
         defer mediapipe.mp_destroy_landmarks(landmarks);
         const nose = landmarks.*.elements[116];
         const cheek = landmarks.*.elements[345];
-        head_tilt = std.math.atan2(cheek.y - nose.y, cheek.x - nose.x);
-
-        // do face landmark logic
-        //drawLandmarks(&frame, landmarks);
+        const forehead = landmarks.*.elements[8];
+        result.head_x = std.math.atan2(cheek.y - nose.y, cheek.x - nose.x);
+        result.head_y = std.math.atan2(forehead.z - nose.z, forehead.y - nose.y) + 2.513272;
+        result.head_y = @min(1, result.head_y);
+        result.head_y = @max(-1, result.head_y);
+        result.head_z = std.math.atan2(cheek.x - nose.x, cheek.z - nose.z) - 1.5707963;
     }
 
-    return Result{
-        .head_tilt = head_tilt,
-    };
+    return result;
 }
 
 fn checkNull(result: anytype) void {

@@ -2,7 +2,7 @@ const mach = @import("mach");
 
 pub const modules = .{
     mach.Core,
-    @import("views/main.zig"),
+    @import("display/main.zig"),
 };
 
 pub fn main() !void {

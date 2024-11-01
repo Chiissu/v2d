@@ -36,6 +36,7 @@ fn init(game: *Mod, core: *mach.Core.Mod) !void {
 
 const Config = struct {
     seg1: f32,
+    shoulder: f32,
 };
 
 fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
@@ -116,7 +117,8 @@ fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
     defer sampler.release();
 
     const config = Config{
-        .seg1 = 0.21875,
+        .seg1 = 0.15,
+        .shoulder = 0.06,
     };
     const config_buffer = device.createBuffer(&.{
         .label = "config",
@@ -140,7 +142,7 @@ fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
     game.init(.{
         .title_timer = try mach.Timer.start(),
         .pipeline = pipeline,
-        .landmarker = try landmark.init(.{ .camera_id = 2 }),
+        .landmarker = try landmark.init(.{ .id = 2 }),
     });
     try updateWindowTitle(core);
 
@@ -201,7 +203,7 @@ fn tick(core: *mach.Core.Mod, game: *Mod) !void {
     defer encoder.release();
 
     // Begin render pass
-    const sky_blue_background = gpu.Color{ .r = 0.776, .g = 0.988, .b = 1, .a = 1 };
+    const sky_blue_background = gpu.Color{ .r = 0, .g = 1, .b = 0, .a = 1 };
     const color_attachments = [_]gpu.RenderPassColorAttachment{.{
         .view = back_buffer_view,
         .clear_value = sky_blue_background,
@@ -218,7 +220,7 @@ fn tick(core: *mach.Core.Mod, game: *Mod) !void {
     render_pass.setPipeline(game.state().pipeline);
     render_pass.setBindGroup(0, binding0, null);
     render_pass.setBindGroup(1, binding1, null);
-    render_pass.draw(12, 1, 0, 0);
+    render_pass.draw(6, 1, 0, 0);
 
     // Finish render pass
     render_pass.end();
