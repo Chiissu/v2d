@@ -51,5 +51,3 @@ You're welcome to add projects here, as long as it is primarily written in a [ti
 ## Copyright & Usage Guideline
 
 This software is not fully FOSS, please read [this usage guideline](./src/utils/guideline.txt).
-
-IMPORTANT COPY-LEFT NOTICE: By distributing modifications or derivative works, a perpetual, worldwide, non-exclusive, royalty-free license is granted to the original author to incorporate these modifications into the original software or any future versions.
