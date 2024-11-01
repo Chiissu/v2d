@@ -8,13 +8,13 @@ pub const name = .app;
 pub const Mod = mach.Mod(@This());
 
 pub const systems = .{
+    .start = .{ .handler = start },
     .init = .{ .handler = init },
-    .after_init = .{ .handler = afterInit },
     .deinit = .{ .handler = deinit },
     .tick = .{ .handler = tick },
 };
 
-title_timer: mach.Timer,
+title_timer: mach.time.Timer,
 pipeline: *gpu.RenderPipeline,
 landmarker: landmark,
 
@@ -29,9 +29,9 @@ pub fn deinit(core: *mach.Core.Mod, game: *Mod) void {
     core.schedule(.deinit);
 }
 
-fn init(game: *Mod, core: *mach.Core.Mod) !void {
+fn start(app: *Mod, core: *mach.Core.Mod) !void {
     core.schedule(.init);
-    game.schedule(.after_init);
+    app.schedule(.init);
 }
 
 const Config = struct {
@@ -39,7 +39,10 @@ const Config = struct {
     shoulder: f32,
 };
 
-fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
+fn init(app: *Mod, core: *mach.Core.Mod) !void {
+    core.state().on_tick = app.system(.tick);
+    core.state().on_exit = app.system(.deinit);
+
     const device: *gpu.Device = core.state().device;
     const queue: *gpu.Queue = core.state().queue;
 
@@ -132,15 +135,15 @@ fn afterInit(game: *Mod, core: *mach.Core.Mod) !void {
     binding0 = device.createBindGroup(&gpu.BindGroup.Descriptor.init(.{
         .layout = layout0,
         .entries = &.{
-            gpu.BindGroup.Entry.sampler(0, sampler),
-            gpu.BindGroup.Entry.textureView(1, texture_view),
-            gpu.BindGroup.Entry.buffer(2, config_buffer, 0, @sizeOf(Config), 0),
+            gpu.BindGroup.Entry.initSampler(0, sampler),
+            gpu.BindGroup.Entry.initTextureView(1, texture_view),
+            gpu.BindGroup.Entry.initBuffer(2, config_buffer, 0, @sizeOf(Config), 0),
         },
     }));
 
     // Store our render pipeline in our module's state, so we can access it later on.
-    game.init(.{
-        .title_timer = try mach.Timer.start(),
+    app.init(.{
+        .title_timer = try mach.time.Timer.start(),
         .pipeline = pipeline,
         .landmarker = try landmark.init(.{ .id = 2 }),
     });
@@ -159,10 +162,7 @@ fn rgb24ToRgba32(allocator: std.mem.Allocator, in: []zigimg.color.Rgb24) !zigimg
 }
 
 fn tick(core: *mach.Core.Mod, game: *Mod) !void {
-    // TODO(important): event polling should occur in mach.Core module and get fired as ECS event.
-    // TODO(Core)
-    var iter = mach.core.pollEvents();
-    while (iter.next()) |event| {
+    while (core.state().nextEvent()) |event| {
         switch (event) {
             .close => core.schedule(.exit), // Tell mach.Core to exit the app
             else => {},
@@ -187,14 +187,14 @@ fn tick(core: *mach.Core.Mod, game: *Mod) !void {
     var binding1 = device.createBindGroup(&gpu.BindGroup.Descriptor.init(.{
         .layout = layout1,
         .entries = &.{
-            gpu.BindGroup.Entry.buffer(0, result_buffer, 0, @sizeOf(landmark.Result), 0),
+            gpu.BindGroup.Entry.initBuffer(0, result_buffer, 0, @sizeOf(landmark.Result), 0),
         },
     }));
     defer binding1.release();
 
     // Grab the back buffer of the swapchain
     // TODO(Core)
-    const back_buffer_view = mach.core.swap_chain.getCurrentTextureView().?;
+    const back_buffer_view = core.state().swap_chain.getCurrentTextureView().?;
     defer back_buffer_view.release();
 
     // Create a command encoder
@@ -241,14 +241,13 @@ fn tick(core: *mach.Core.Mod, game: *Mod) !void {
 }
 
 fn updateWindowTitle(core: *mach.Core.Mod) !void {
-    try mach.Core.printTitle(
-        core,
+    try core.state().printTitle(
         core.state().main_window,
         "core-custom-entrypoint [ {d}fps ] [ Input {d}hz ]",
         .{
             // TODO(Core)
-            mach.core.frameRate(),
-            mach.core.inputRate(),
+            core.state().frameRate(),
+            core.state().inputRate(),
         },
     );
     core.schedule(.update);

@@ -7,20 +7,20 @@
 
     .dependencies = .{
         .mach = .{
-            .url = "https://github.com/hexops/mach/archive/98801a258e4f59e1c464206684e7751818609f77.tar.gz",
-            .hash = "1220c62d964c12d2446d90a294e28f863b7f668dd5c3691e652f336119b2096d11f4",
+            .url = "https://github.com/hexops/mach/archive/51e689950524b53ebe493db5b6300329e3795644.tar.gz",
+            .hash = "1220588c5a48731c5c9c778386e7717902f1b828ccdf9a14585e3b241b3067299557",
         },
         .zigimg = .{
-            .url = "https://github.com/zigimg/zigimg/archive/d9dbbe22b5f7b5f1f4772169ed93ffeed8e8124d.zip",
-            .hash = "122013646f7038ecc71ddf8a0d7de346d29a6ec40140af57f838b0a975c69af512b0",
+            .url = "https://github.com/zigimg/zigimg/archive/5b5d718159c6ec223a54c9bb960690576e5df9c2.tar.gz",
+            .hash = "122040d9cc905342547e1e9da227a7f16fae5e7ae23134cb62aaef64c5b2c4f58828",
         },
         .zigcv = .{
-            .url = "https://github.com/Froxcey/zigcv/archive/refs/tags/0.13_compat_0.2.0.tar.gz",
-            .hash = "1220b283a1e91944d07b0018d4b59221a2031f342b55b062d170936dc413d098f214",
+            .url = "https://github.com/Froxcey/zigcv/archive/8076f266f97aa867f2c1dfc5e0465fe0cc4ce8d3.tar.gz",
+            .hash = "1220297fdd362e2f58937f2cd965bbccedcca9cf932d08afaf6e170c91fdcbd4c29e",
         },
         .@"mach-imgui" = .{
-            .url = "https://github.com/Froxcey/mach-imgui/archive/84efeaa62bff899475c0994dbf1372e30680dc10.zip",
-            .hash = "1220a733821fd9d7ad636d0616cea58e7c83d8db1971e694dc54edc1ff595257a4e5",
+            .url = "https://github.com/Froxcey/mach-imgui/archive/aff7ec70e28494a6ecf9d1c12691a308e66357b2.zip",
+            .hash = "122027ed6b328745ec9065ed77aa8b4ca94a9aba3fad51315d3a69a1e4d3083e74f1",
         },
         .nfd = .{
             .url = "https://github.com/Froxcey/nfd-zig/archive/f6d36231ca34eeb7668c3672b7892a0490608171.tar.gz",
