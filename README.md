@@ -1,5 +1,7 @@
 # V2D Studio
 
+[English](./README.md)｜[繁體中文](./README-zh.md)
+
 Animate an image into a virtual avatar using your webcam. This is especially useful for those who don't have a 3D avatar but wants to start VTubing.
 
 V2D Studio is written in Zig using [Mach](https://machengine.org/) and [Mediapipe](https://ai.google.dev/edge/mediapipe).
@@ -31,11 +33,13 @@ Since Mediapipe doesn't support hardware acceleration on Windows and I don't hav
 
 ## Running
 
-Before you can do anything, you'll need to add your own asset `main.png` in `assets/img/`
+> Since we are rewriting the UI and config system, you need to put the image you want to animate in `./assets/img/main.png`. This temporary workaround will be removed in a future version.
 
-After finishing configurating, you can run `v2d` in the terminal to run the app.
+Just open a terminal and run `v2d`
 
-If you have any general question regarding the usage of v2d, feel free to contact [@froxcey](https://github.com/froxcey)
+## Support
+
+If you need help, [contact Frox](https://frox.tw/contacts)
 
 ## Related software
 
@@ -43,11 +47,14 @@ You're welcome to add projects here, as long as it is primarily written in a [ti
 
 ## Future plans
 
-1. WebRTP remote support
-2. Parallax
-3. Special effects and shaders
-4. Plug-in system (longer term)
+- [ ] Proper UI and config system
+- [ ] WebRTP remote support
+- [ ] Parallax effect
+- [ ] Special effects and shaders
+- [ ] Plug-in system (longer term)
 
 ## Copyright & Usage Guideline
 
-This software is not fully FOSS, please read [this usage guideline](./src/utils/guideline.txt).
+© 2024 Chiissu Team
+
+As long as you are using this for personal studio and with proper attribute, we don't really mind what you're doing.
